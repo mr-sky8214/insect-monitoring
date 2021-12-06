@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Insect Prediction</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'assets/style.css' %}" />
+    <script src="{%static 'assets/script.js'%}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row my-3">
+            <div class="col">
+                <h2>Predictions</h2>
+            </div>
+        </div>
+        <div class="row py-2">
+
+            <div class="col-md-6 py-1">
+                <img id="img1" src="{{image.insect_input_img.url}}" class="card-img-top" alt="...">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- <canvas id="chDonut1"></canvas> -->
+                        <p>Original</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6 py-1">
+                <img id="img2" src="{{image.insect_detected_img.url}}" class="card-img-top" alt="...">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- <canvas id="chDonut1"></canvas> -->
+                        <p>Predicted</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="row my-3">
+            <h2>Predicted insects</h2>
+            <div class="col-md-6 py-1">
+                <div>
+                    <canvas id="pieChart" style="max-width: 500px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-3 justify-content-center text-center">
+            <a href="/"><button type="button" class="btn btn-dark">Back to Home</button></a>
+        </div>
+
+    </div>
+
+
+
+
+</body>
+
+<script>
+    let img1 = document.querySelector("#img1");
+    let img2 = document.querySelector("#img2");
+    document.querySelector("#pieChart").style.maxWidth = img1.clientWidth;
+    console.log(img2);
+    img2.width = img1.clientWidth;
+    img2.height = img1.clientHeight;
+    // console.log(img1.clientWidth);
+</script>
+
+<!-- pie chart -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script>
+    //pie
+    let counts = "{{image.counts}}"
+    let counts_arr_str = counts.split(" ");
+    let insect_count = [];
+    for (let i = 0; i < counts_arr_str.length - 1; i++)
+        insect_count.push(parseInt(counts_arr_str[i]));
+
+    console.log(counts_arr_str);
+    var ctxP = document.getElementById("pieChart").getContext('2d');
+    var myPieChart = new Chart(ctxP, {
+        type: 'pie',
+        data: {
+            labels: ["Aphides", "Catepillars", "Meay Bug", "Mites", "Stem Borer", "Thrips"],
+            datasets: [{
+                data: insect_count,
+                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#F4BEEE"],
+                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774", "#D47AE8"]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+
+<script>
+    window.onload = function () {
+        if (!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload();
+        }
+    }
+</script>
+
+</html>
